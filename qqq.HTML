@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMART Objective Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      padding: 1.5rem;
+      color: #333;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #0069d9;
+      color: white;
+      border: none;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0053b3;
+    }
+    #result {
+      background: #fff;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-left: 4px solid #0069d9;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>SMART Objective Generator</h2>
+  <label for="duty">Job Duty or Task</label>
+  <textarea id="duty" rows="2" placeholder="e.g., Manage the sales team"></textarea>
+
+  <label for="specific">Specific – What exactly will be done?</label>
+  <textarea id="specific" rows="2"></textarea>
+
+  <label for="measurable">Measurable – How will success be tracked?</label>
+  <textarea id="measurable" rows="2"></textarea>
+
+  <label for="achievable">Achievable – Is this realistic and attainable?</label>
+  <textarea id="achievable" rows="2"></textarea>
+
+  <label for="relevant">Relevant – How does this align with organizational goals?</label>
+  <textarea id="relevant" rows="2"></textarea>
+
+  <label for="timebound">Time-bound – What’s the deadline?</label>
+  <textarea id="timebound" rows="2"></textarea>
+
+  <button id="generate">Generate SMART Objective</button>
+
+  <div id="result">
+    <h3>Your SMART Objective</h3>
+    <p id="output"></p>
+  </div>
+
+  <script>
+    document.getElementById("generate").addEventListener("click", () => {
+      const duty = document.getElementById("duty").value.trim();
+      const s = document.getElementById("specific").value.trim();
+      const m = document.getElementById("measurable").value.trim();
+      const a = document.getElementById("achievable").value.trim();
+      const r = document.getElementById("relevant").value.trim();
+      const t = document.getElementById("timebound").value.trim();
+
+      if (!duty || !s || !m || !t) {
+        alert("Please fill out at least the Duty, Specific, Measurable, and Time-bound fields.");
+        return;
+      }
+
+      const objective = `For the duty of "${duty}", the objective is to ${s}, measured by ${m}, ensuring it is ${a.toLowerCase() || "attainable"} and relevant by ${r.toLowerCase() || "supporting team and company goals"}, to be completed by ${t}.`;
+
+      document.getElementById("output").textContent = objective;
+      document.getElementById("result").style.display = "block";
+    });
+  </script>
+</body>
+</html>
