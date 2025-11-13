@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMART Objective Checker</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f8fafc;
+      color: #333;
+      max-width: 700px;
+      margin: auto;
+      padding: 1.5rem;
+    }
+    h2 {
+      text-align: center;
+      color: #1d4ed8;
+    }
+    .container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+    label {
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      height: 100px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 1rem;
+      background-color: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #1636a1;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .aspect {
+      margin-bottom: 0.8rem;
+      padding: 0.8rem;
+      border-left: 5px solid #ccc;
+      background: #f1f5ff;
+      border-radius: 6px;
+    }
+    .yes { border-left-color: #16a34a; background: #dcfce7; }
+    .no { border-left-color: #dc2626; background: #fee2e2; }
+    .aspect strong { display: block; color: #1d4ed8; margin-bottom: 0.3rem; }
+  </style>
+</head>
+<body>
+  <h2>SMART Objective Checker</h2>
+  <div class="container">
+    <label for="objective">Paste a SMART Objective to Evaluate:</label>
+    <textarea id="objective" placeholder="e.g., Increase monthly customer satisfaction scores by 10% by December 2025."></textarea>
+    <button id="check">Check SMART Components</button>
+    <div id="results" class="result"></div>
+  </div>
+
+  <script>
+    // Evaluate if the input meets SMART criteria
+    function assessSMART(objective) {
+      const lower = objective.toLowerCase();
+      const criteriaMet = {
+        specific: /\b(train|manage|develop|create|improve|increase|reduce|analyze|organize|deliver|design|implement|support|maintain)\b/.test(lower),
+        measurable: /\b(\d+%|increase|decrease|measure|target)\b/.test(lower),
+        achievable: /\b(achieve|attain|possible)\b/.test(lower),
+        relevant: /\b(support|align|goal)\b/.test(lower),
+        timebound: /\b(by|within|deadline)\b/.test(lower)
+      };
+      return criteriaMet;
+    }
+
+    // Create a new SMART objective based on unmet criteria
+    function generateCorrectObjective(criteria) {
+      let specificPart = criteria.specific ? "" : "Increase customer satisfaction by";
+      let measurablePart = criteria.measurable ? "" : "15%";
+      let achievablePart = criteria.achievable ? "" : "using existing staff and resources.";
+      let relevantPart = criteria.relevant ? "" : "This will support our overall business goals.";
+      let timeboundPart = criteria.timebound ? "" : "This will be completed by the end of Q4 2026.";
+
+      return `${specificPart} ${measurablePart} ${achievablePart} ${relevantPart} ${timeboundPart}`.trim().replace(/\s+/g, ' ');
+    }
+
+    // Handle the evaluation when the user clicks the button
+    document.getElementById("check").addEventListener("click", () => {
+      const text = document.getElementById("objective").value.trim();
+      const output = document.getElementById("results");
+      if (!text) {
+        alert("Please enter an objective to check.");
+        output.innerHTML = "";
+        return;
+      }
+      
+      const criteria = assessSMART(text);
+      output.innerHTML = "";
+
+      let allMet = true;
+      for (const [key, met] of Object.entries(criteria)) {
+        const aspectDiv = document.createElement("div");
+        aspectDiv.className = `aspect ${met ? 'yes' : 'no'}`;
+        aspectDiv.innerHTML = `<strong>${key.charAt(0).toUpperCase() + key.slice(1)}</strong> - ${met ? 'Yes' : 'No'}`;
+        output.appendChild(aspectDiv);
+        
+        if (!met) {
+          allMet = false;
+        }
+      }
+
+      if (!allMet) {
+        const correctedObjective = generateCorrectObjective(criteria);
+        const correctedDiv = document.createElement("div");
+        correctedDiv.className = "aspect yes";
+        correctedDiv.innerHTML = `<strong>Suggested SMART Objective:</strong> ${correctedObjective}`;
+        output.appendChild(correctedDiv);
+      }
+    });
+  </script>
+</body>
+</html>
